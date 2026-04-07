@@ -1,0 +1,32 @@
+name: data-cleaning-env
+description: Real-world data cleaning and transformation environment for ML pipelines
+version: 1.0
+
+entrypoint: api.server:app
+
+tasks:
+  - id: 0
+    name: Easy - Missing Value Handling
+    description: Fill missing values correctly
+
+  - id: 1
+    name: Medium - Data Normalization
+    description: Normalize formats like dates, currency
+
+  - id: 2
+    name: Hard - Full Data Cleaning Pipeline
+    description: Multi-step cleaning and transformation
+
+observation_space:
+  type: dict
+  description: Preview of dataset, missing values, step count
+
+action_space:
+  type: dict
+  description: Action type and column to apply cleaning
+
+reward:
+  type: float
+  description: Based on correctness and improvements
+
+max_steps: 10
