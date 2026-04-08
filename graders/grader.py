@@ -11,8 +11,8 @@ def compute_detailed_score(df, clean_df):
     scores = {}
     for col in df.columns:
         total = len(df[col])
-        comparison = (df[col] == clean_df[col] | (
-            df[col].isnull() & clean_df[col].isnull())
+        comparison = (df[col] == clean_df[col]) | (
+            df[col].isnull() & clean_df[col].isnull()
         )
         correct = comparison.sum()
         scores[col] = correct / total 

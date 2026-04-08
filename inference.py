@@ -152,5 +152,5 @@ def run_task(task_id):
 
 
 if __name__ == "__main__":
-    for task_id in [0, 1, 2]:
+    for task_id in range(3):
         run_task(task_id)

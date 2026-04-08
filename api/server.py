@@ -36,7 +36,7 @@ def reset(task_id: int = 0):
 def step(action: Action):
     global current_env 
     observation, reward, done, info = current_env.step(action)
-    return {
+    response = {
         "observation": observation,
         "reward": float(reward),
         "done": done,

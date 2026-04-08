@@ -20,7 +20,7 @@ def fill_missing(df, action):
     if df[col].dtype in ["float64", "int64"]:
         df[col] = df[col].fillna(df[col].mean())
     else:
-        df[col] =df[col].fillna("unknown")
+        df[col] = df[col].fillna("unknown")
     return df 
 
 def clean_text(df, action):
