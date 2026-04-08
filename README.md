@@ -4,6 +4,8 @@ emoji: 🧹
 colorFrom: blue
 colorTo: green
 sdk: docker
+sdk_version: "1.0"
+python_version: "3.10"
 app_file: api/server.py
 pinned: false
 ---
