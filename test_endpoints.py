@@ -11,19 +11,19 @@ BASE_URL = "http://localhost:8000"
 
 def test_health():
     """Test basic health endpoint"""
-    print("\n🔍 Testing health endpoint...")
+    print("\n Testing health endpoint...")
     try:
         response = requests.get(f"{BASE_URL}/")
         assert response.status_code == 200
-        print("✅ Health endpoint working:", response.json())
+        print(" Health endpoint working:", response.json())
         return True
     except Exception as e:
-        print(f"❌ Health endpoint failed: {e}")
+        print(f" Health endpoint failed: {e}")
         return False
 
 def test_reset():
     """Test /reset endpoint"""
-    print("\n🔍 Testing /reset endpoint...")
+    print("\n Testing /reset endpoint...")
     try:
         for task_id in [0, 1, 2]:
             response = requests.post(f"{BASE_URL}/reset?task_id={task_id}")
@@ -31,15 +31,15 @@ def test_reset():
             data = response.json()
             assert "task" in data
             assert "observation" in data
-            print(f"✅ Task {task_id} reset successful: {data['task']}")
+            print(f" Task {task_id} reset successful: {data['task']}")
         return True
     except Exception as e:
-        print(f"❌ Reset endpoint failed: {e}")
+        print(f" Reset endpoint failed: {e}")
         return False
 
 def test_step():
     """Test /step endpoint"""
-    print("\n🔍 Testing /step endpoint...")
+    print("\n Testing /step endpoint...")
     try:
         # Reset first
         response = requests.post(f"{BASE_URL}/reset?task_id=0")
@@ -53,24 +53,24 @@ def test_step():
         assert "observation" in data
         assert "reward" in data
         assert "done" in data
-        print(f"✅ Step endpoint working. Reward: {data['reward']}, Done: {data['done']}")
+        print(f" Step endpoint working. Reward: {data['reward']}, Done: {data['done']}")
         return True
     except Exception as e:
-        print(f"❌ Step endpoint failed: {e}")
+        print(f" Step endpoint failed: {e}")
         return False
 
 def test_state():
     """Test /state endpoint"""
-    print("\n🔍 Testing /state endpoint...")
+    print("\n Testing /state endpoint...")
     try:
         response = requests.get(f"{BASE_URL}/state")
         assert response.status_code == 200
         data = response.json()
         assert "data" in data or "error" not in data
-        print(f"✅ State endpoint working")
+        print(f" State endpoint working")
         return True
     except Exception as e:
-        print(f"❌ State endpoint failed: {e}")
+        print(f" State endpoint failed: {e}")
         return False
 
 def main():
@@ -89,7 +89,7 @@ def main():
         except requests.exceptions.ConnectionError:
             retry_count += 1
             if retry_count < max_retries:
-                print(f"⏳ Waiting for server... ({retry_count}/{max_retries})")
+                print(f" Waiting for server... ({retry_count}/{max_retries})")
                 time.sleep(1)
             else:
                 print(f"❌ Server not responding at {BASE_URL}")
@@ -111,7 +111,7 @@ def main():
     passed = sum(1 for v in results.values() if v)
     
     for test_name, passed_test in results.items():
-        status = "✅ PASS" if passed_test else "❌ FAIL"
+        status = " PASS" if passed_test else " FAIL"
         print(f"{status}: {test_name}")
     
     print(f"\nTotal: {passed}/{total} tests passed")

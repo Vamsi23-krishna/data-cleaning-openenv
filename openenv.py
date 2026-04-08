@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 def validate_structure():
     """Validate project structure and required files"""
-    print("\n📁 Validating project structure...")
+    print("\n Validating project structure...")
     required_files = [
         'api/server.py',
         'env/environment.py',
@@ -40,18 +40,18 @@ def validate_structure():
         if not os.path.exists(file):
             missing.append(file)
         else:
-            print(f"  ✅ {file}")
+            print(f"   {file}")
     
     if missing:
-        print(f"\n  ❌ Missing files: {', '.join(missing)}")
+        print(f"\n   Missing files: {', '.join(missing)}")
         return False
     
-    print("  ✅ All required files present")
+    print("   All required files present")
     return True
 
 def validate_imports():
     """Validate that all modules can be imported"""
-    print("\n📦 Validating imports...")
+    print("\n Validating imports...")
     modules_to_test = [
         'api.server',
         'env.environment',
@@ -66,26 +66,26 @@ def validate_imports():
     for module in modules_to_test:
         try:
             __import__(module)
-            print(f"  ✅ {module}")
+            print(f"   {module}")
         except Exception as e:
             import_errors.append((module, str(e)))
-            print(f"  ❌ {module}: {e}")
+            print(f"   {module}: {e}")
     
     if import_errors:
         return False
     
-    print("  ✅ All modules imported successfully")
+    print("   All modules imported successfully")
     return True
 
 def validate_tasks():
     """Validate that all tasks load correctly"""
-    print("\n📋 Validating tasks...")
+    print("\n Validating tasks...")
     try:
         from tasks.task_loader import load_all_tasks
         tasks = load_all_tasks()
         
         if len(tasks) != 3:
-            print(f"  ❌ Expected 3 tasks, got {len(tasks)}")
+            print(f"   Expected 3 tasks, got {len(tasks)}")
             return False
         
         for i, task in enumerate(tasks):
@@ -93,20 +93,20 @@ def validate_tasks():
             missing_keys = [k for k in required_keys if k not in task]
             
             if missing_keys:
-                print(f"  ❌ Task {i} missing keys: {missing_keys}")
+                print(f"   Task {i} missing keys: {missing_keys}")
                 return False
             
-            print(f"  ✅ Task {i}: {task['name']}")
+            print(f"   Task {i}: {task['name']}")
         
-        print("  ✅ All tasks loaded successfully")
+        print("   All tasks loaded successfully")
         return True
     except Exception as e:
-        print(f"  ❌ Failed to load tasks: {e}")
+        print(f"   Failed to load tasks: {e}")
         return False
 
 def validate_datasets():
     """Validate that all datasets exist and are readable"""
-    print("\n📊 Validating datasets...")
+    print("\n Validating datasets...")
     import pandas as pd
     
     datasets = [
@@ -121,17 +121,17 @@ def validate_datasets():
     for path, name in datasets:
         try:
             df = pd.read_csv(path)
-            print(f"  ✅ {name}: {df.shape[0]} rows, {df.shape[1]} columns")
+            print(f"   {name}: {df.shape[0]} rows, {df.shape[1]} columns")
         except Exception as e:
             print(f"  ❌ {name}: {e}")
             return False
     
-    print("  ✅ All datasets valid")
+    print("   All datasets valid")
     return True
 
 def validate_actions():
     """Validate that all action handlers work"""
-    print("\n⚙️  Validating actions...")
+    print("\n  Validating actions...")
     from utils.actions_list import ALLOWED_ACTIONS
     
     print(f"  Allowed actions: {', '.join(ALLOWED_ACTIONS)}")
@@ -143,15 +143,15 @@ def validate_actions():
     
     missing_actions = [a for a in expected_actions if a not in ALLOWED_ACTIONS]
     if missing_actions:
-        print(f"  ❌ Missing actions: {missing_actions}")
+        print(f"   Missing actions: {missing_actions}")
         return False
     
-    print(f"  ✅ All {len(ALLOWED_ACTIONS)} actions defined")
+    print(f"   All {len(ALLOWED_ACTIONS)} actions defined")
     return True
 
 def validate_environment():
     """Validate environment functionality"""
-    print("\n🌍 Validating environment...")
+    print("\n Validating environment...")
     try:
         from env.environment import DataCleaningEnv
         from models.action import Action
@@ -165,15 +165,15 @@ def validate_environment():
         missing_keys = [k for k in required_keys if k not in observation]
         
         if missing_keys:
-            print(f"  ❌ Observation missing keys: {missing_keys}")
+            print(f"   Observation missing keys: {missing_keys}")
             return False
         
-        print(f"  ✅ Environment reset successful")
+        print(f"   Environment reset successful")
         
         # Test step
         action = Action(action_type="fill_missing", column="age")
         obs, reward, done, info = env.step(action)
-        print(f"  ✅ Step executed: reward={reward:.3f}, done={done}")
+        print(f"   Step executed: reward={reward:.3f}, done={done}")
         
         # Test state
         state = env.state()
@@ -181,11 +181,11 @@ def validate_environment():
             print("  ❌ State missing required fields")
             return False
         
-        print(f"  ✅ Environment state retrieved")
-        print("  ✅ Environment validation complete")
+        print(f"   Environment state retrieved")
+        print("   Environment validation complete")
         return True
     except Exception as e:
-        print(f"  ❌ Environment validation failed: {e}")
+        print(f"   Environment validation failed: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -210,7 +210,7 @@ def validate_all():
         try:
             results[name] = check_func()
         except Exception as e:
-            print(f"  ❌ Unexpected error: {e}")
+            print(f"   Unexpected error: {e}")
             results[name] = False
     
     print("\n" + "=" * 60)
@@ -218,7 +218,7 @@ def validate_all():
     print("=" * 60)
     
     for name, passed in results.items():
-        status = "✅ PASS" if passed else "❌ FAIL"
+        status = " PASS" if passed else " FAIL"
         print(f"{status}: {name}")
     
     total = len(results)

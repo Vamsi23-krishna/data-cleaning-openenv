@@ -1,0 +1,38 @@
+[project]
+name = "data-cleaning-openenv"
+version = "0.1.0"
+description = "Data Cleaning OpenEnv: A reinforcement learning environment for automated data cleaning pipelines"
+authors = [
+  { name = "Vamsi Krishna" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "pandas",
+  "numpy",
+  "pydantic",
+  "openai",
+  "python-dateutil",
+  "requests",
+  "openenv-core>=0.2.0"
+]
+
+[project.scripts]
+server = "api.server:main"
+start = "api.server:main"
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+package = true
+
+[tool.setuptools.packages.find]
+include = ["api*", "env*", "models*", "tasks*", "utils*", "graders*"]
+exclude = ["datasets*", "server*", "__pycache__*", "*.egg-info*"]
+
+[tool.setuptools]
+py-modules = []

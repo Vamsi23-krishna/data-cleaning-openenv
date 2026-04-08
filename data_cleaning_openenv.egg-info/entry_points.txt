@@ -1,0 +1,3 @@
+[console_scripts]
+server = api.server:main
+start = api.server:main

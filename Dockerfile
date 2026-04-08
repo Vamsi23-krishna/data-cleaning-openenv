@@ -1,11 +1,20 @@
-FROM python:3.10
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY . .
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml README.md ./
+COPY api/ api/
+COPY env/ env/
+COPY models/ models/
+COPY tasks/ tasks/
+COPY utils/ utils/
+COPY graders/ graders/
+COPY datasets/ datasets/
+
+RUN uv sync --no-dev
 
 EXPOSE 7860
 
-CMD ["uvicorn", "api.server:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uv", "run", "server"]
