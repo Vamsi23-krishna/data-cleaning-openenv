@@ -121,43 +121,61 @@ The environment is deployed on Hugging Face Spaces:
 - **Live Demo**: https://huggingface.co/spaces/Vamsi23-krishna/data-cleaning-openenv
 - **API Endpoints**: Available at the Space URL
 
-### API Usage
+### API Reference
 
-#### Initialize Environment
+#### POST `/reset?task_id=<0|1|2>`
+Initialize a specific task environment.
 
-```python
-import requests
-
-# Reset to Task 0 (Easy)
-response = requests.post("http://127.0.0.1:8000/reset?task_id=0")
-observation = response.json()["observation"]
-
-print("Task:", response.json()["task"])
-print("Missing values:", observation["missing_values"])
-```
-
-#### Execute Actions
-
-```python
-# Fill missing values in salary column
-action = {
-    "action_type": "fill_missing",
-    "column": "salary"
+**Response:**
+```json
+{
+  "task": "easy_missing_values",
+  "observation": {
+    "preview": {...},
+    "missing_values": {"column": count},
+    "steps": 0
+  }
 }
-
-response = requests.post("http://127.0.0.1:8000/step", json=action)
-result = response.json()
-
-print("Reward:", result["reward"])
-print("Done:", result["done"])
 ```
 
-#### Get Current State
+#### POST `/step`
+Execute a cleaning action.
 
-```python
-response = requests.get("http://127.0.0.1:8000/state")
-state = response.json()
-print("Current data shape:", len(state["data"]))
+**Request Body:**
+```json
+{
+  "action_type": "fill_missing|clean_text|normalize_date|convert_salary|remove_duplicates",
+  "column": "column_name"  // Optional for remove_duplicates
+}
+```
+
+**Response:**
+```json
+{
+  "observation": {...},
+  "reward": 0.4,
+  "done": false,
+  "info": {"steps": 1}
+}
+```
+
+#### GET `/state`
+Get current environment state.
+
+**Response:**
+```json
+{
+  "data": {...},
+  "steps": 5
+}
+```
+
+#### GET `/`
+Health check endpoint.
+
+**Response:**
+```json
+{"message": "Data Cleaning OpenEnv is running"}
 ```
 
 ### Validation
@@ -196,16 +214,19 @@ The environment has been validated across all three difficulty levels:
 
 ### Dataset Characteristics
 
-**Easy Task**: 4 rows × 5 columns
-- Focus: Missing value imputation
+**Easy Task**: 4 rows × 5 columns (id, name, age, date, salary)
+- Focus: Missing value imputation and basic format conversion
+- Issues: Missing age and salary values, inconsistent salary formats
 - Primary actions: `fill_missing`, `convert_salary`
 
-**Medium Task**: 4 rows × 5 columns
-- Focus: Format normalization
+**Medium Task**: 4 rows × 5 columns (id, name, age, date, salary)
+- Focus: Format normalization across multiple data types
+- Issues: Inconsistent date formats, mixed text casing, currency symbols
 - Primary actions: `normalize_date`, `convert_salary`, `clean_text`
 
-**Hard Task**: 6 rows × 5 columns → 5 rows × 5 columns
-- Focus: Complete pipeline + deduplication
+**Hard Task**: 6 rows × 5 columns → 5 rows × 5 columns (after deduplication)
+- Focus: Complete pipeline including duplicate removal
+- Issues: All format inconsistencies + duplicate records, missing values
 - Primary actions: All actions including `remove_duplicates`
 
 ### Validation Results
@@ -290,6 +311,9 @@ pip install -r requirements.txt
 - `numpy` - Numerical operations
 - `python-dateutil` - Date parsing
 
+**Development Dependencies:**
+- `requests` - HTTP client (for testing and inference scripts)
+
 ## Contributing
 
 1. Fork the repository
@@ -315,82 +339,3 @@ If you use this environment in your research, please cite:
   url={https://github.com/Vamsi23-krishna/data-cleaning-openenv}
 }
 ```
-- `numpy`
-- `py-dateutil`
-- `requests`
-
-## Running the API
-
-Start the FastAPI server from the repository root:
-
-```bash
-uvicorn api.server:app --reload --port 8001
-```
-
-The server will run at `http://127.0.0.1:8001`.
-
-## API Endpoints
-
-- `POST /reset?task_id=<id>`
-  - Reset the selected task environment.
-  - Returns `task` and `observation`.
-
-- `POST /step`
-  - Submit an action JSON object.
-  - Returns `observation`, `reward`, `done`, and `info`.
-
-- `GET /state`
-  - Query the current environment state.
-
-- `GET /`
-  - Health endpoint.
-
-## Task List
-
-The repository includes three tasks:
-
-1. `easy_missing_values`
-   - Fill missing values in the dataset.
-2. `medium_format_cleaning`
-   - Normalize dates, salary formats, and text.
-3. `hard_full_pipeline`
-   - Perform a full data-cleaning pipeline on a harder dataset.
-
-Task configuration is defined in `openenv.yaml` and loaded by `tasks/task_loader.py`.
-
-## Example Inference
-
-After starting the server, run:
-
-```bash
-python inference.py
-```
-
-This script resets each task and attempts a series of cleaning actions while printing rewards and progress.
-
-## How It Works
-
-The environment tracks:
-
-- `preview` of the current dataset state
-- `missing_values`
-- current `steps`
-
-Actions include:
-
-- `fill_missing`
-- `clean_text`
-- `normalize_date`
-- `convert_salary`
-- `remove_duplicates`
-
-Rewards are computed by comparing the current dataset to the target clean dataset and by tracking improvements in correctness and missing values.
-
-## Notes
-
-- The `venv/` folder is ignored and should not be committed.
-- The environment uses CSV datasets located in `datasets/`.
-
-## License
-
-This repository does not include a license file. Add a license if you intend to share or publish this project.
