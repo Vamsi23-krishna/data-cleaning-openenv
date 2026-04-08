@@ -57,3 +57,19 @@ def state():
 @app.get("/")
 def home():
     return {"message": "Data Cleaning OpenEnv is running"}
+
+@app.post("/spaces/{owner}/{repo}/reset")
+def reset_prefixed(owner: str, repo: str, task_id: int = 0):
+    return reset(task_id)
+
+@app.post("/spaces/{owner}/{repo}/step")
+def step_prefixed(owner: str, repo: str, action: Action):
+    return step(action)
+
+@app.get("/spaces/{owner}/{repo}/state")
+def state_prefixed(owner: str, repo: str):
+    return state()
+
+@app.get("/spaces/{owner}/{repo}/")
+def home_prefixed(owner: str, repo: str):
+    return home()
